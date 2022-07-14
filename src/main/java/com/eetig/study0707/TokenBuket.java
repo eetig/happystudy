@@ -12,28 +12,38 @@ public class TokenBuket {
 
     //当前令牌数
     static long cur = 0;
-
+    //上一次查看令牌数量的时间
     static long lastTime = System.currentTimeMillis();
 
+    /**
+     * @Description tokenBucket 令牌桶算法
+     * @Author xhong103
+     * @Date 2022-07-08 周五 上午 11:00
+     * @param capacity  容量
+     * @param rate 放入令牌的速度
+     * @return boolean true 限流;false 不限流
+     */
     static boolean tokenBucket(int capacity, int rate){
-
+        //调用算法的时间
         long millisTime = System.currentTimeMillis();
-
+        //两次请求的时间差
         long time = millisTime - lastTime;
-
+        //可用令牌数
         cur = Math.min(capacity, cur + time * rate);
-
+        //重置上次调用时间
         lastTime = millisTime;
-
+        //如果令牌数为0,返回true
         if (cur == 0) {
             return true;
         }
-
+        //拿走一个令牌
+        --cur;
+        //否则为false
         return false;
     }
 
     public static void main(String[] args) {
-        for (int i = 0; ; i++) {
+        for (; ;) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e){
@@ -44,7 +54,6 @@ public class TokenBuket {
             for (int j = 0; j < randomTime; j++) {
                 request();
             }
-
         }
     }
 
